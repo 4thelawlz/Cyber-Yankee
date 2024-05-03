@@ -54,7 +54,12 @@ We can compare this to the network map that we are given and fill in the blanks,
 ##### Helpful Commands:
 
 ```
-codeblocks
+nmap -sV -sT -p445 --script "vuln and safe" <ip> 
+Nmap -sC -sV -A -p- 1-65535 -oN <ip>
+Nmap -Pn -sS -T4 -p- -v <ip>
+
+./masscan <ip> -p1-1000
+
 ```
 
 ###### Documentation Links:
@@ -63,21 +68,27 @@ codeblocks
 
 ### Vulnerability Scanning
 
+There should be a Tenable/Nessus scanning tool on the network that can be used to test for vulnerabilities. Nmap also can be used but not as in depth. 
+
+##### Documentation Links:
+- (https://docs.tenable.com/Nessus.htm)
+
 ### Subdomain Enumeration
 
 There is most likely going to be a internet facing web server. Anything internet facing that has 80 and 443 open we should be doing a subdomain scan to determine the threat landscape of that device. 
 
 ##### Tools:
-- AMASS, Sublister (Use Kali Linux for both tools)
+- AMASS, Sublister, dirb,dirbuster (Use Kali Linux for both tools)
 
 ##### Helpful Commands:
 
 ```
-codeblocks
+dirb http://<ip> /usr/share/wordlists/dirb/common.txt
 ```
 
 ###### Documentation Links:
 - (https://securitytrails.com/blog/subdomain-scanner-find-subdomains)
+- (https://github.com/owasp-amass/amass)
 
 ### SIEM Alert Triage
  
@@ -90,6 +101,7 @@ codeblocks
 - Compare alerts to parts of the MITRE ATT&CK Framework
 
 ##### Documentation Links:
+- (https://docs.securityonion.net/en/2.3/architecture.html)
 
 ### Phishing Email Triage
 
@@ -109,9 +121,13 @@ Tier 2 will be handing System Administration, Active Directory, and Firewall. Th
 
 ### User Account Baseline 
 
-Begin comparing user accounts in 
+Begin comparing user accounts against the HR provided list with the CISO, flag any unknown users. 
+
+TIP: Create a AD user group that has no read, write, or execute permissions and place any unknown users in there. There is a script within the Blueteam playbooks that can be run to help with this. 
 
 ### Admin Account Reviews
+
+Review the admin accounts against the HR list and request with your partner company to remove access or move to a sandbox AD group any users not on the employee list, remove unecessary privileges from unecessary users such as HR or Finance. 
 
 ### Logging and Alerting Baseline
 
@@ -141,7 +157,42 @@ Auditing wise we need the following turned on at a minimum. Work with the CISO o
 
 ### Firewall Rule Enumeration
 
+The firewall rules and network will most likely be a black box or you will have very little information about it. Follow these general steps to best assess and mitigate as many 
+
+1. Assess Exsisting Network and Security Architecture
+- Review the current network topology given to us and inventory all switches, routers, and firewalls to understand how they call connect
+- Determine the exsisitng VLANs and Subnets through scanning or the firewall ACLs
+
+1. Audit Current Firewall Configs
+- Examine the exsisting firewall rules for whats allowed and denied
+- check for unsued and overly permissive rues
+- verify security policies and profiles such as DNS URL Filtering, 
+
+1. Patch and Implement Best Security Practices
+- Review Palo Alto best practices and request to make changes to mirror that other than the ports required by the rules of engagement
+- Request to update to the most current patches for the firewalls as there are critical zero days for these machines out there
+- Enable anaomolgy based protections and threat signatures
+
+1. Segmentation and Hardening
+- Make changes to seperate our critical assets from our normal network if possible.
+- Try to turn off any uncessary ports to and segment out any uneeded computers to our OT enviorment this will help us know what device they are going to use for the final attack.
+
+1. Logging and Monitoring
+- Make sure all the logs are being collected and sent to Security Onion
+
 ### Active Directory Enumeration
+
+If there is time it would be a good idea to do a enumeration of active directory using bloodhound
+
+##### Documentation Link:
+- (https://github.com/BloodHoundAD/BloodHound)
 
 ### DNS Filtering
 
+If you or a Tier 1 Airman can review DNS logs to see if anything seems suspicious this could be a good way of catching the red team using DNS for exfil or C2.
+Review the following:
+- Country of origin
+- Unusual DNS names
+- DNS typosquatting names
+
+Tip: You could drop a list of dns names into chatgpt and ask if any of these are typosquatted
