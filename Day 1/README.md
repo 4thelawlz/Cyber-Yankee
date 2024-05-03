@@ -19,6 +19,11 @@ Take these actions in this order, some of these can be done consecitvely as they
 1. [Phishing Email Triage](#email-server-triage)
 
 #### Tier 2
+1. [User Account Baseline](#user-account-baseline)
+1. [Admin Account Reviews](#admin-account-Reviews)
+1. [Logging and Alerting Baseline](#logging-and-alerting-baseline)
+1. [Firewall Rule Enumeration](#firewall-rule-enumeration)
+1. [DNS Filtering](#dns-filtering)
 
 
 ### CISO Initial Actions
@@ -106,7 +111,7 @@ Tier 2 will be handing System Administration, Active Directory, and Firewall. Th
 
 Begin comparing user accounts in 
 
-#### Admin Account reviews
+#### Admin Account Reviews
 
 #### Logging and Alerting Baseline
 
@@ -129,7 +134,7 @@ Check for the following is being logged
 (https://github.com/SwiftOnSecurity/sysmon-config)
 (https://support.microsoft.com/en-us/topic/microsoft-security-advisory-update-to-improve-windows-command-line-auditing-february-10-2015-570edc4b-8ee7-950d-4629-045e308743e4)
 
-#### Firewall Rule enumeration
+#### Firewall Rule Enumeration
 
 #### DNS Filtering
 
