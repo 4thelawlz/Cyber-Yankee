@@ -163,21 +163,21 @@ The firewall rules and network will most likely be a black box or you will have 
 - Review the current network topology given to us and inventory all switches, routers, and firewalls to understand how they call connect
 - Determine the exsisitng VLANs and Subnets through scanning or the firewall ACLs
 
-1. Audit Current Firewall Configs
+2. Audit Current Firewall Configs
 - Examine the exsisting firewall rules for whats allowed and denied
 - check for unsued and overly permissive rues
 - verify security policies and profiles such as DNS URL Filtering, 
 
-1. Patch and Implement Best Security Practices
+3. Patch and Implement Best Security Practices
 - Review Palo Alto best practices and request to make changes to mirror that other than the ports required by the rules of engagement
 - Request to update to the most current patches for the firewalls as there are critical zero days for these machines out there
 - Enable anaomolgy based protections and threat signatures
 
-1. Segmentation and Hardening
+4. Segmentation and Hardening
 - Make changes to seperate our critical assets from our normal network if possible.
 - Try to turn off any uncessary ports to and segment out any uneeded computers to our OT enviorment this will help us know what device they are going to use for the final attack.
 
-1. Logging and Monitoring
+5. Logging and Monitoring
 - Make sure all the logs are being collected and sent to Security Onion
 
 ### Active Directory Enumeration
