@@ -32,11 +32,11 @@ The CISO should immediately request the following actions be taken via the RFC p
 
 1. Reset all users passwords, if this is not approved request all admin passwords to be reset at a minimum.
 1. Request a full employee list from HR to compare against the users in Active Directory
-1. Request Additional logging changes based on Tier 2 findings
+1. Request Additional logging changes based on Tier 2 findings, Powershell, Cmd Line, and advanced Audit policy configuration logging at a minimum. 
 
 ### Tier 1 Actions
 
-#### Network Enumeration
+### Network Enumeration
 
 Begin with a MassScan scan to identify all the IPs in the network and then use Nmap for additional in depth information we need to understand
 
@@ -61,9 +61,9 @@ codeblocks
 - (https://github.com/robertdavidgraham/masscan)
 - (https://securitytrails.com/blog/masscan)
 
-#### Vulnerability Scanning
+### Vulnerability Scanning
 
-#### Subdomain Enumeration
+### Subdomain Enumeration
 
 There is most likely going to be a internet facing web server. Anything internet facing that has 80 and 443 open we should be doing a subdomain scan to determine the threat landscape of that device. 
 
@@ -79,7 +79,7 @@ codeblocks
 ###### Documentation Links:
 - (https://securitytrails.com/blog/subdomain-scanner-find-subdomains)
 
-#### SIEM Alert Triage
+### SIEM Alert Triage
  
  Have one to two Airmen begin reviewing the alerts already in Security Onion.
 
@@ -91,7 +91,7 @@ codeblocks
 
 ##### Documentation Links:
 
-#### Phishing Email Triage
+### Phishing Email Triage
 
 Once we have done an nmap we will be able to determine the email server either through the provided network map or by the OS scans or ports open like port 25 SMTP, 110 POP3, 143 IMAP. 
 
@@ -107,13 +107,13 @@ This can help point us to the intial access point of the red team.
 
 Tier 2 will be handing System Administration, Active Directory, and Firewall. They may also assist Tier 1 as needed. 
 
-#### User Account Baseline 
+### User Account Baseline 
 
 Begin comparing user accounts in 
 
-#### Admin Account Reviews
+### Admin Account Reviews
 
-#### Logging and Alerting Baseline
+### Logging and Alerting Baseline
 
 We can assume there will be minimal logging and alerting set up on Day 1. Tier 2 should review what logging we have set up in the enviorment and work with the CISO to potentially get Sysmon turned on if possible. 
 
@@ -130,11 +130,18 @@ Check for the following is being logged
 - Application Logs if applicable
 - Cloud Enviorment Logs if applicable
 
+Auditing wise we need the following turned on at a minimum. Work with the CISO on this. 
+- Advanced Audit Policy Configurations by GPO
+- All Powershell logging
+- All command line process logging and auditing
+
 ##### Documentation Links:
 (https://github.com/SwiftOnSecurity/sysmon-config)
 (https://support.microsoft.com/en-us/topic/microsoft-security-advisory-update-to-improve-windows-command-line-auditing-february-10-2015-570edc4b-8ee7-950d-4629-045e308743e4)
 
-#### Firewall Rule Enumeration
+### Firewall Rule Enumeration
 
-#### DNS Filtering
+### Active Directory Enumeration
+
+### DNS Filtering
 
