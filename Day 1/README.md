@@ -6,7 +6,9 @@ This roadmap will give you the steps and tools needed to have a complete baselin
 
 Take these actions in this order
 
-1. * [CISO Intial Actions](#ciso-initial-actions)
+1. [CISO Intial Actions](#ciso-initial-actions)
+1. [Network Enumeration](#network-enumeration)
+
 
 ### CISO Initial Actions
 
