@@ -6,7 +6,7 @@ This is meant to be a very broad overview, please use additional playbooks for i
 
 ## Day 1 Actions
 
-Take these actions in this order, some of these can be done consecitvely as they can be assigned to a various Airmen depending on their Tier level or comfort with the tools. 
+Take these actions in this order, some of these can be done consecutively as they can be assigned to a various Airmen depending on their Tier level or comfort with the tools. 
 
 ### CISO
 1. [CISO Intial Actions](#ciso-initial-actions)
@@ -33,8 +33,11 @@ The CISO should immediately request the following actions be taken via the RFC p
 1. Reset all users passwords, if this is not approved request all admin passwords to be reset at a minimum.
 1. Request a full employee list from HR to compare against the users in Active Directory
 1. Request Additional logging changes based on Tier 2 findings, Powershell, Cmd Line, and advanced Audit policy configuration logging at a minimum. 
+1. Request network map or last vulnerability scan, if available
 
 ### Tier 1 Actions
+### <ins>Ensure the IP addresses for hosts used for Scanning / Enumeration are "whitelisted" or ignored in Security Onion<ins/>
+- [BPF Filters](https://docs.securityonion.net/en/2.4/bpf.html)
 
 ### Network Enumeration
 
@@ -45,6 +48,8 @@ Begin with a MassScan scan to identify all the IPs in the network and then use N
 - Ports open on each IP
 - Services running on these devices
 - Software Versions
+- Identify "critical" systems
+- Identify "public" facing systems (webservers, file servers, email servers etc) 
 
 We can compare this to the network map that we are given and fill in the blanks, once we do that we can decide what is most important to triage. 
 
@@ -54,24 +59,24 @@ We can compare this to the network map that we are given and fill in the blanks,
 ##### Helpful Commands:
 
 ```
-nmap -sV -sT -p445 --script "vuln and safe" <ip> 
-Nmap -sC -sV -A -p- 1-65535 -oN <ip>
-Nmap -Pn -sS -T4 -p- -v <ip>
+sudo nmap -sV -sT -p445 --script "vuln and safe" <ip> 
+sudo nmap -sC -sV -A -p- 1-65535 -oN <ip>
+sudo nmap -Pn -sS -T4 -p- -v <ip>
 
-./masscan <ip> -p1-1000
-
+sudo ./masscan <ip> -p1-1000
 ```
 
 ###### Documentation Links:
-- (https://github.com/robertdavidgraham/masscan)
-- (https://securitytrails.com/blog/masscan)
+- [NMap MindMap Mapping Tool](https://github.com/Parimal-shaw/NMapify?tab=readme-ov-file)
+- [MasScan GitHub](https://github.com/robertdavidgraham/masscan)
+- [MasScan Blog](https://securitytrails.com/blog/masscan)
 
 ### Vulnerability Scanning
 
 There should be a Tenable/Nessus scanning tool on the network that can be used to test for vulnerabilities. Nmap also can be used but not as in depth. 
 
 ##### Documentation Links:
-- (https://docs.tenable.com/Nessus.htm)
+- [Tenable Nessus](https://docs.tenable.com/Nessus.htm)
 
 ### Subdomain Enumeration
 
@@ -87,8 +92,8 @@ dirb http://<ip> /usr/share/wordlists/dirb/common.txt
 ```
 
 ###### Documentation Links:
-- (https://securitytrails.com/blog/subdomain-scanner-find-subdomains)
-- (https://github.com/owasp-amass/amass)
+- [Subdomain Finder](https://securitytrails.com/blog/subdomain-scanner-find-subdomains)
+- [Amass Github](https://github.com/owasp-amass/amass)
 
 ### SIEM Alert Triage
  
@@ -99,19 +104,20 @@ dirb http://<ip> /usr/share/wordlists/dirb/common.txt
 - Group alerts by computer name or IP, this can help build a story to understand what is happening
 - Try different groupings or sortings, sort by amount of alerts, oldest to newest, etc. to find patterns.
 - Compare alerts to parts of the MITRE ATT&CK Framework
+- Use Security Onions built in case management to document and track findings. 
 
 ##### Documentation Links:
-- (https://docs.securityonion.net/en/2.3/architecture.html)
+- [Security Onion](https://docs.securityonion.net/en/2.3/architecture.html)
 
 ### Phishing Email Triage
 
 Once we have done an nmap we will be able to determine the email server either through the provided network map or by the OS scans or ports open like port 25 SMTP, 110 POP3, 143 IMAP. 
 
-Depending on threat intelligence, there may be potential phishing emails based on past events. We should review these emails for potential phishing attempts like:
+Depending on threat intelligence, there may be potential phishing emails based on past events. Once you obtain access to Exchange, review emails for potential phishing attempts like:
 
 - malicious attachments or executables
 - malicious links
-- potential DLP issues
+- potential DLP issues (sending out larges amounts of data)
 
 This can help point us to the intial access point of the red team. 
 
@@ -121,8 +127,17 @@ Tier 2 will be handing System Administration, Active Directory, and Firewall. Th
 
 ### User Account Baseline 
 
-Begin comparing user accounts against the HR provided list with the CISO, flag any unknown users. 
-
+Begin comparing user accounts against the HR provided list with the CISO, flag any unknown users or newly created users. Might help to review typical naming convention for users, any anomolies might be adversary related. 
+```
+Example:
+Normal User Account = john.smith
+"newly" Created Account = johnsmith
+```
+Helpful Active Directory PowerShell Commands (Install the PowerShell Active Directory Module)
+- Enabled accounts - ```Get-ADUser -filter {Enabled -eq "true"} | ft```
+- Users w/ Email - ```Get-ADUser -Filter {mail -ne "null"} -Properties Name,GivenName,mail| ft Name,GivenName,mail```
+- When user accounts created - ```Get-ADUser -filter * -Properties Name,whencreated | ft Name,WhenCreated```
+- List of all users and properties - ```Get-ADUser -filter * -properties * | Export-CSV c:\temp\Users.csv```
 TIP: Create a AD user group that has no read, write, or execute permissions and place any unknown users in there. There is a script within the Blueteam playbooks that can be run to help with this. 
 
 ### Admin Account Reviews
@@ -134,10 +149,13 @@ Review the admin accounts against the HR list and request with your partner comp
 We can assume there will be minimal logging and alerting set up on Day 1. Tier 2 should review what logging we have set up in the enviorment and work with the CISO to potentially get Sysmon turned on if possible. 
 
 Additionally, Tier 2 should review Security Onion and make sure we have turned on the custom playbooks as well for additional alerting. 
+- "Playbooks"in Security Onion allow you to apply sigma rules that are in the default repo and add others
+	- You can create a “new play”, start with a sigma rule, it’ll convert it to an OOQL, give alert name (make it custom). Then change from draft to alert to roll out. [Youtube How to](https://youtu.be/qKIAAA7ro6M?t=2358)
+- Recommond enabling at a minimum "Critical" & "High" Playbooks (alerts)
 
 Check for the following is being logged
 - Windows event logs (security, audit, PowerShell, and command line is minimum)
-- IDS/IPS logs
+- IDS/IPS logs (Zeek)
 - Authentication logs 
 - Firewall Logs
 - DNS Logs
@@ -152,8 +170,8 @@ Auditing wise we need the following turned on at a minimum. Work with the CISO o
 - All command line process logging and auditing
 
 ##### Documentation Links:
-(https://github.com/SwiftOnSecurity/sysmon-config)
-(https://support.microsoft.com/en-us/topic/microsoft-security-advisory-update-to-improve-windows-command-line-auditing-february-10-2015-570edc4b-8ee7-950d-4629-045e308743e4)
+- [Sysmon Config](https://github.com/SwiftOnSecurity/sysmon-config)
+- [Command Line Auditing](https://support.microsoft.com/en-us/topic/microsoft-security-advisory-update-to-improve-windows-command-line-auditing-february-10-2015-570edc4b-8ee7-950d-4629-045e308743e4)
 
 ### Firewall Rule Enumeration
 
@@ -185,7 +203,7 @@ The firewall rules and network will most likely be a black box or you will have 
 If there is time it would be a good idea to do a enumeration of active directory using bloodhound
 
 ##### Documentation Link:
-- (https://github.com/BloodHoundAD/BloodHound)
+- [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 
 ### DNS Filtering
 
