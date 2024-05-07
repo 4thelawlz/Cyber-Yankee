@@ -2,6 +2,22 @@
 
 Use the following tools to look for persistence and hidden malware running on a device.
 
+## Sysinternal Suite Download
+
+Download the zip file from here (https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite).
+
+After you download the zip file, you need to extract the files. After the files are extracted, the extra step, which is by choice, is to add the folder path to the environment variables. By doing so, you can launch the tools via the command line without navigating to the directory the tools reside in. 
+
+Environment Variables can be edited from System Properties.
+
+The System Properties can be launched via the command line by running sysdm.cpl. Click on the Advanced tab. 
+
+Select Path under System Variables and select Edit... then OK.
+
+In the next screen select New and enter the folder path where the Sysinternals Suite was extracted to. Press OK to confirm the changes. Just put it on your desktop. 
+
+Open a new command prompt (elevated) to confirm that the Sysinternals Suite can be executed from any location.
+
 ## What To Look For
 
 Look for:
