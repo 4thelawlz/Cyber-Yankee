@@ -48,5 +48,36 @@ Hightlight the suspicious process and hit Ctrl + H This will show handles of pro
 
 in properties under image you can see the autostart location. hit explore and itll bring you to registry
 
+## Process Monitor
+
+1. Look at parent child process relationship - look for strange child processes
+
+
+Tips:
+Filter by category is write, this will show only modifications to the system. 
+
+## TCP View
+
+## Sigcheck
+
+This will be used to check sginatures of exectuables and processes.
+
+You will need to be in the file path you want to use the sigcheck tool in. Some suggested file paths
+
+- C:\Program Files
+- C:\Windows
+- C:\Windows\System32
+
+```
+sigcheck -s -e -u * 
+```
+
+Tips:
+If that command doesnt work remove the -s
+
+## ListDLLs
+
+
+
 
 
