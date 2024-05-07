@@ -77,6 +77,11 @@ If that command doesnt work remove the -s
 
 ## ListDLLs
 
+This tool can be used to check for any unsigned DLLs
+
+```
+listdll -u *
+```
 
 
 
